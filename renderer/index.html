@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>桌面女友</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <!-- 语音气泡 -->
+  <div id="bubble" class="bubble hidden">
+    <div id="bubble-text" class="bubble-text"></div>
+  </div>
+
+  <!-- 状态提示（短暂出现） -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- 聊天输入栏 -->
+  <div id="chatbar" class="chatbar hidden">
+    <input id="chat-input" type="text" placeholder="和她说点什么…" autocomplete="off" />
+    <button id="chat-send">发送</button>
+  </div>
+
+  <!-- 常驻聊天按钮 -->
+  <div id="chat-toggle" class="chat-toggle" title="和我聊天">💬</div>
+
+  <!-- 右键菜单 -->
+  <div id="menu" class="menu hidden">
+    <div class="menu-item" data-action="speak">💬 说句话</div>
+    <div class="menu-item" data-action="chat">⌨️ 聊天</div>
+    <div class="menu-item" data-action="ai">🧠 AI 设置</div>
+    <div class="menu-sep"></div>
+    <div class="menu-label">换角色</div>
+    <div id="char-list"></div>
+    <div class="menu-sep"></div>
+    <div class="menu-label">声音（甜美系）</div>
+    <div class="menu-item voice-item" data-voice="zh-CN-XiaoxiaoNeural">　晓晓 · 温柔甜美</div>
+    <div class="menu-item voice-item" data-voice="zh-CN-XiaoyiNeural">　晓伊 · 活泼可爱</div>
+    <div class="menu-item voice-item" data-voice="zh-CN-XiaoshuangNeural">　晓双 · 软萌可爱</div>
+    <div class="menu-item voice-item" data-voice="zh-CN-YunxiaNeural">　云夏 · 可爱少女</div>
+    <div class="menu-sep"></div>
+    <div class="menu-item" data-action="quiet">🤫 安静模式</div>
+    <div class="menu-item" data-action="hide">🙈 隐藏（托盘可唤回）</div>
+    <div class="menu-item" data-action="quit">👋 退出</div>
+  </div>
+
+  <!-- AI 设置面板 -->
+  <div id="settings" class="settings hidden">
+    <div class="settings-card">
+      <div class="settings-title">🧠 AI 设置</div>
+      <div class="settings-sub">填入兼容 OpenAI 的接口，就能让 AI 直接回你。不填则用本地对话。</div>
+      <label>接口地址 Base URL</label>
+      <input id="set-baseurl" type="text" placeholder="https://api.deepseek.com/v1" />
+      <label>API Key</label>
+      <input id="set-apikey" type="password" placeholder="sk-..." />
+      <label>模型 Model</label>
+      <input id="set-model" type="text" placeholder="deepseek-chat" />
+      <div class="settings-actions">
+        <button id="set-test" class="ghost">测试连接</button>
+        <button id="set-cancel" class="ghost">取消</button>
+        <button id="set-save">保存</button>
+      </div>
+      <div class="settings-hint">保存后自动写入 config.json，重启也生效。</div>
+    </div>
+  </div>
+
+  <script src="vendor/live2d.min.js"></script>
+  <script src="vendor/live2dcubismcore.min.js"></script>
+  <script src="vendor/pixi.min.js"></script>
+  <script src="vendor/index.min.js"></script>
+  <script src="dialogue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

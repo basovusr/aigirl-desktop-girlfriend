@@ -1,0 +1,205 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+#canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 语音气泡（左上角，避开脸） */
+.bubble {
+  position: fixed;
+  left: 0px;
+  top: 6px;
+  transform: none;
+  max-width: 40%;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #333;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  font-size: 15px;
+  line-height: 1.5;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.bubble::after {
+  content: "";
+  position: absolute;
+  right: -8px;
+  top: 26px;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid rgba(255, 255, 255, 0.94);
+}
+.bubble.hidden { opacity: 0; transform: translateY(-4px); }
+
+/* 短暂状态提示 */
+.toast {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 12px;
+  z-index: 20;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.toast.hidden { opacity: 0; }
+
+/* 右键菜单 */
+.menu {
+  position: fixed;
+  min-width: 190px;
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  padding: 6px;
+  z-index: 30;
+  max-height: 88vh;
+  overflow-y: auto;
+}
+.menu.hidden { display: none; }
+.menu-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #333;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.menu-item:hover { background: #f0f0f0; }
+.menu-sep {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 4px 6px;
+}
+.menu-label {
+  padding: 6px 12px 2px;
+  font-size: 11px;
+  color: #999;
+  white-space: nowrap;
+}
+.menu-item.voice-item { color: #555; }
+.menu-item.voice-item.active { color: #ff4d8d; font-weight: bold; }
+.menu-item.char-item { color: #555; }
+.menu-item.char-item.active { color: #ff4d8d; font-weight: bold; }
+
+/* 聊天输入栏 */
+.chatbar {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  width: 92%;
+  z-index: 40;
+}
+.chatbar.hidden { display: none; }
+.chatbar input {
+  flex: 1;
+  padding: 16px 20px;
+  border: 2px solid #d0d0d0;
+  border-radius: 24px;
+  font-size: 19px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+}
+.chatbar input:focus { border-color: #ff8ab5; }
+.chatbar button {
+  padding: 16px 26px;
+  border: none;
+  border-radius: 24px;
+  background: #ff6fa5;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
+}
+.chatbar button:hover { background: #ff5a94; }
+
+/* 常驻聊天按钮 */
+.chat-toggle {
+  position: fixed;
+  right: 14px;
+  bottom: 96px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 45;
+  user-select: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.chat-toggle:hover { transform: scale(1.1); background: #fff; }
+.chat-toggle.active { background: #ffe3ee; }
+#chatbar:not(.hidden) ~ .chat-toggle { display: none; }
+
+/* AI 设置面板 */
+.settings {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+}
+.settings.hidden { display: none; }
+.settings-card {
+  width: 300px;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+.settings-title { font-size: 16px; font-weight: bold; color: #333; }
+.settings-sub { font-size: 12px; color: #888; margin: 6px 0 12px; line-height: 1.5; }
+.settings-card label { display: block; font-size: 12px; color: #666; margin: 8px 0 4px; }
+.settings-card input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+}
+.settings-card input:focus { border-color: #ff8ab5; }
+.settings-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+.settings-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #ff6fa5;
+  color: #fff;
+}
+.settings-actions button.ghost { background: #eee; color: #555; }
+.settings-actions button:hover { opacity: 0.9; }
+.settings-hint { font-size: 11px; color: #aaa; margin-top: 10px; }
